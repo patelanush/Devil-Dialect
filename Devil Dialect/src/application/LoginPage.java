@@ -38,7 +38,7 @@ public class LoginPage extends Application {
         primaryStage.show();
     }
 
-    private Scene createLoginScene() {
+    public Scene createLoginScene() {
         Text title = new Text("Devil Dialect");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 30));
         title.setFill(Color.RED);
@@ -50,40 +50,42 @@ public class LoginPage extends Application {
 
         TextField asuIdInput = new TextField();
         asuIdInput.setPromptText("ASU ID");
-        asuIdInput.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;");
+        asuIdInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
 
         PasswordField passwordInput = new PasswordField();
         passwordInput.setPromptText("Password");
-        passwordInput.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;");
+        passwordInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
 
         Button loginButton = new Button("Log in");
         loginButton.setPrefWidth(200);
-        loginButton.setStyle("-fx-background-color: #C0C0C0; -fx-text-fill: black;");
+        loginButton.setStyle("-fx-background-color: silver; -fx-text-fill: black;");
         loginButton.setOnAction(e -> handleLogin(asuIdInput.getText(), passwordInput.getText()));
 
         VBox layout = new VBox(10);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: #1E0033;");
+        layout.setStyle("-fx-background-color: indigo;");
         layout.getChildren().addAll(title, logoView, asuIdInput, passwordInput, loginButton);
 
         return new Scene(layout, 400, 500);
     }
 
     private void loadUsers() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/users.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 3) {
-                    String asuId = parts[0];
-                    String password = parts[1];
-                    String role = parts[2];
-                    users.put(asuId, new String[]{password, role});
+        if (users.isEmpty()) { // Load only if users are not already loaded
+            try (BufferedReader reader = new BufferedReader(new FileReader("src/users.txt"))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length == 3) {
+                        String asuId = parts[0];
+                        String password = parts[1];
+                        String role = parts[2];
+                        users.put(asuId, new String[]{password, role});
+                    }
                 }
+            } catch (IOException e) {
+                System.out.println("Error loading users: " + e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println("Error loading users: " + e.getMessage());
         }
     }
 
@@ -108,8 +110,8 @@ public class LoginPage extends Application {
         Scene newScene = null;
         switch (role) {
             case "buyer":
-            	BuyerPage buyerPage = new BuyerPage();
-                newScene = buyerPage.createContent(primaryStage);
+                BuyerPage buyerPage = new BuyerPage();
+                newScene = buyerPage.createContent(primaryStage, this); // Pass primaryStage and this instance
                 break;
             case "seller":
                 SellerPage sellerPage = new SellerPage();
@@ -124,6 +126,10 @@ public class LoginPage extends Application {
                 return;
         }
         primaryStage.setScene(newScene);
+    }
+    
+    public void reloadLoginScene() {
+        primaryStage.setScene(createLoginScene());
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {

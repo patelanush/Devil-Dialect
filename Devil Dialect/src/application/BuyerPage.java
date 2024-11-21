@@ -16,9 +16,9 @@ import javafx.stage.Stage;
 public class BuyerPage {
 	
 	private GridPane bookGrid;
-	public Scene createContent(Stage primaryStage) {
+	public Scene createContent(Stage primaryStage, LoginPage loginPage) {
 	    // Header Section
-	    HBox header = createHeader();
+	    HBox header = createHeader(primaryStage, loginPage);
 
 	    // Sidebar Section
 	    VBox sidebar = createSidebar();
@@ -31,42 +31,43 @@ public class BuyerPage {
 	    layout.setTop(header);
 	    layout.setLeft(sidebar);
 	    layout.setCenter(bookGrid); // Use the initialized bookGrid here
-	    layout.setStyle("-fx-background-color: #f4f4f4;");
+	    layout.setStyle("-fx-background-color: lightgray;");
 
 	    return new Scene(layout, 800, 600);
 	}
 
-    private HBox createHeader() {
-        // Company Logo
-        Image logoImage = new Image(getClass().getResourceAsStream("/images/devil.jpg"));
-        ImageView logoView = new ImageView(logoImage);
-        logoView.setFitWidth(50);
-        logoView.setPreserveRatio(true);
+	private HBox createHeader(Stage primaryStage, LoginPage loginPage) {
+	    // Company Logo
+	    Image logoImage = new Image(getClass().getResourceAsStream("/images/devil.jpg"));
+	    ImageView logoView = new ImageView(logoImage);
+	    logoView.setFitWidth(50);
+	    logoView.setPreserveRatio(true);
 
-        // Store Name
-        Label storeName = new Label("Devil Dialect");
-        storeName.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        storeName.setTextFill(Color.WHITE);
+	    // Store Name
+	    Label storeName = new Label("Devil Dialect");
+	    storeName.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+	    storeName.setTextFill(Color.WHITE);
 
-        // Search Bar
-    
+	    // Cart Button
+	    Button cartButton = new Button("Cart ($0.00)");
+	    cartButton.setStyle("-fx-background-color: dodgerblue; -fx-text-fill: white;");
 
-        // Cart Button
-        Button cartButton = new Button("Cart ($0.00)");
-        cartButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
+	    // Sign Out Button
+	    Button signOutButton = new Button("Sign Out");
+	    signOutButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+	    signOutButton.setOnAction(e -> {
+	        loginPage.reloadLoginScene(); // Redirect back to the login page
+	    });
 
-        // Sign Out Button
-        Button signOutButton = new Button("Sign Out");
-        signOutButton.setStyle("-fx-background-color: #FF4136; -fx-text-fill: white;");
+	    // Layout
+	    HBox header = new HBox(20, logoView, storeName, cartButton, signOutButton);
+	    header.setAlignment(Pos.CENTER);
+	    header.setPadding(new Insets(10));
+	    header.setStyle("-fx-background-color: navy;");
 
-        // Layout
-        HBox header = new HBox(20, logoView, storeName, cartButton, signOutButton);
-        header.setAlignment(Pos.CENTER);
-        header.setPadding(new Insets(10));
-        header.setStyle("-fx-background-color: #002366;");
+	    return header;
+	}
 
-        return header;
-    }
 
     private VBox createSidebar() {
         // Categories Dropdown
@@ -104,7 +105,7 @@ public class BuyerPage {
         // Layout
         VBox sidebar = new VBox(15, categoryLabel, categoryDropdown, conditionLabel, conditionDropdown);
         sidebar.setPadding(new Insets(10));
-        sidebar.setStyle("-fx-background-color: #E8E8E8;");
+        sidebar.setStyle("-fx-background-color: lightgray;");
         sidebar.setPrefWidth(200);
 
         return sidebar;
@@ -140,7 +141,7 @@ public class BuyerPage {
 
         // Add to Cart Button
         Button addToCartButton = new Button("Add to Cart");
-        addToCartButton.setStyle("-fx-background-color: #FF6347; -fx-text-fill: white;");
+        addToCartButton.setStyle("-fx-background-color: orange; -fx-text-fill: white;");
         addToCartButton.setOnAction(e -> {
             System.out.println(book.getTitle() + " added to cart.");
         });
@@ -148,7 +149,7 @@ public class BuyerPage {
         // Arrange elements in a vertical box
         VBox bookCard = new VBox(10, titleLabel, authorLabel, yearLabel, conditionLabel, addToCartButton);
         bookCard.setPadding(new Insets(10));
-        bookCard.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #CCCCCC; -fx-border-radius: 5;");
+        bookCard.setStyle("-fx-background-color: white; -fx-border-color: silver; -fx-border-radius: 5;");
         return bookCard;
     }
     
