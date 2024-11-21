@@ -108,8 +108,8 @@ public class LoginPage extends Application {
         Scene newScene = null;
         switch (role) {
             case "buyer":
-                BuyerPage buyerPage = new BuyerPage();
-                newScene = new Scene(buyerPage.createContent(), 400, 500);
+            	BuyerPage buyerPage = new BuyerPage();
+                newScene = buyerPage.createContent(primaryStage);
                 break;
             case "seller":
                 SellerPage sellerPage = new SellerPage();
