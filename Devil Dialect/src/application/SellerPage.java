@@ -1,5 +1,7 @@
 package application;
 
+import java.io.IOException;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -127,16 +129,39 @@ public class SellerPage {
 	    Button listButton = new Button("List my Book!");
 	    listButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
 	    listButton.setOnAction(e -> {
-	        // Placeholder for functionality
-	        System.out.println("Book listed for sale!");
-	        System.out.println("Book Details:");
-	        System.out.println("Name: " + nameField.getText());
-	        System.out.println("Author: " + authorField.getText());
-	        System.out.println("Year: " + yearField.getText());
-	        System.out.println("Category: " + categoryDropdown.getValue());
-	        System.out.println("Condition: " + ((RadioButton) conditionGroup.getSelectedToggle()).getText());
-	        System.out.println("Original Price: " + pricePaidField.getText());
-	        System.out.println("Selling Price: " + estimatedPriceField.getText());
+	        // Validate form inputs
+	        String name = nameField.getText().trim();
+	        String author = authorField.getText().trim();
+	        String year = yearField.getText().trim();
+	        String category = categoryDropdown.getValue();
+	        RadioButton selectedCondition = (RadioButton) conditionGroup.getSelectedToggle();
+	        String condition = (selectedCondition != null) ? selectedCondition.getText() : null;
+	        String pricePaid = pricePaidField.getText().trim();
+	        String estimatedPrice = estimatedPriceField.getText().trim();
+
+	        if (name.isEmpty() || author.isEmpty() || year.isEmpty() || category == null || condition == null || pricePaid.isEmpty() || estimatedPrice.isEmpty()) {
+	            // Show error alert
+	            showAlert(Alert.AlertType.ERROR, "Error", "Please fill out all fields before listing the book.");
+	            return;
+	        }
+
+	        // Write to books.txt
+	        String bookDetails = String.format("%s,%s,%s,%s,%s,%s", name, author, year, condition, category, estimatedPrice);
+	        try {
+	            FileHandler.appendToBooksFile(bookDetails); // FileHandler handles appending to the file
+	            showAlert(Alert.AlertType.INFORMATION, "Success", "Your book has been listed successfully!");
+	        } catch (IOException ex) {
+	            showAlert(Alert.AlertType.ERROR, "Error", "Failed to list your book. Please try again.");
+	        }
+
+	        // Clear the form after success
+	        nameField.clear();
+	        authorField.clear();
+	        yearField.clear();
+	        conditionGroup.getSelectedToggle().setSelected(false);
+	        categoryDropdown.setValue(null);
+	        pricePaidField.clear();
+	        estimatedPriceField.clear();
 	    });
 
 	    // Layout
@@ -216,4 +241,12 @@ public class SellerPage {
 			estimatedPriceField.setText("0.0");
 		}
 	}
+	
+	private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

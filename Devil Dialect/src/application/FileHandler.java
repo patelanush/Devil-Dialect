@@ -1,7 +1,9 @@
 package application;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,5 +29,12 @@ public class FileHandler {
             System.out.println("Error reading books.txt: " + e.getMessage());
         }
         return books;
+    }
+    
+    public static void appendToBooksFile(String bookDetails) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/books.txt", true))) {
+            writer.write(bookDetails);
+            writer.newLine(); // Add a new line for the next entry
+        }
     }
 }
