@@ -1,17 +1,129 @@
 package application;
 
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 public class SellerPage {
-    public VBox createContent() {
-        VBox layout = new VBox();
-        layout.setSpacing(10);
-        
-        Text welcomeText = new Text("Welcome to the Seller Page");
-        layout.getChildren().add(welcomeText);
+
+	 public Scene createContent(Stage primaryStage, LoginPage loginPage) {
+	        // Header Section
+	        HBox header = createHeader(primaryStage, loginPage);
+
+	        // Main Content Area (Placeholder for now)
+	        VBox content = createFormSection();
+
+	        // Combine Layout
+	        BorderPane layout = new BorderPane();
+	        layout.setTop(header);
+	        layout.setCenter(content);
+	        layout.setStyle("-fx-background-color: lightgray;");
+
+	        return new Scene(layout, 800, 600);
+	    }
 
 
-        return layout;
+	 private HBox createHeader(Stage primaryStage, LoginPage loginPage) {
+		    // Logo
+		    Image logoImage = new Image(getClass().getResourceAsStream("/images/devil.jpg"));
+		    ImageView logoView = new ImageView(logoImage);
+		    logoView.setFitWidth(50);
+		    logoView.setPreserveRatio(true);
+
+		    // Store Name
+		    Label storeName = new Label("Devil Dialect");
+		    storeName.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+		    storeName.setTextFill(Color.WHITE);
+
+		    // Sign Out Button
+		    Button signOutButton = new Button("Sign Out");
+		    signOutButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+		    signOutButton.setOnAction(e -> {
+		        loginPage.loadUsers(); // Reload the user data
+		        primaryStage.setScene(loginPage.createContent(primaryStage)); // Redirect to login page
+		    });
+
+		    // Layout
+		    HBox header = new HBox(20, logoView, storeName, signOutButton);
+		    header.setAlignment(Pos.CENTER);
+		    header.setPadding(new Insets(10));
+		    header.setStyle("-fx-background-color: navy;");
+
+		    return header;
+		}
+
+    private VBox createFormSection() {
+        // Form Title
+        Label formTitle = new Label("Please Input the Following Information About Your Book:");
+        formTitle.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        formTitle.setTextFill(Color.BLACK);
+
+        // Name of Book
+        Label nameLabel = new Label("Name of Book:");
+        TextField nameField = new TextField();
+
+        // Category
+        Label categoryLabel = new Label("Category:");
+        ComboBox<String> categoryDropdown = new ComboBox<>();
+        categoryDropdown.getItems().addAll(
+            "Natural Science Books",
+            "Computer Books",
+            "Math Books",
+            "English Language Books",
+            "Other Books"
+        );
+
+        // Condition
+        Label conditionLabel = new Label("Condition:");
+        ToggleGroup conditionGroup = new ToggleGroup();
+        RadioButton likeNew = new RadioButton("Used Like New");
+        RadioButton moderatelyUsed = new RadioButton("Moderately Used");
+        RadioButton heavilyUsed = new RadioButton("Heavily Used");
+        likeNew.setToggleGroup(conditionGroup);
+        moderatelyUsed.setToggleGroup(conditionGroup);
+        heavilyUsed.setToggleGroup(conditionGroup);
+
+        HBox conditionBox = new HBox(10, likeNew, moderatelyUsed, heavilyUsed);
+        conditionBox.setAlignment(Pos.CENTER);
+
+        // Price Paid
+        Label pricePaidLabel = new Label("Price Paid:");
+        TextField pricePaidField = new TextField();
+
+        // Estimated Selling Price
+        Label estimatedPriceLabel = new Label("Estimated Selling Price:");
+        TextField estimatedPriceField = new TextField();
+        estimatedPriceField.setEditable(false);
+
+        // List My Book Button
+        Button listButton = new Button("List my Book!");
+        listButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        listButton.setOnAction(e -> {
+            // Placeholder for functionality
+            System.out.println("Book listed for sale!");
+        });
+
+        // Layout
+        VBox formSection = new VBox(15, formTitle, 
+            nameLabel, nameField, 
+            categoryLabel, categoryDropdown, 
+            conditionLabel, conditionBox, 
+            pricePaidLabel, pricePaidField, 
+            estimatedPriceLabel, estimatedPriceField, 
+            listButton
+        );
+        formSection.setAlignment(Pos.CENTER);
+        formSection.setPadding(new Insets(20));
+        formSection.setStyle("-fx-background-color: lightgray;");
+
+        return formSection;
     }
 }

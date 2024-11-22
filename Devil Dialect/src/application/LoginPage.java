@@ -69,8 +69,40 @@ public class LoginPage extends Application {
 
         return new Scene(layout, 400, 500);
     }
+    
+    public Scene createContent(Stage primaryStage) {
+        Text title = new Text("Devil Dialect");
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        title.setFill(Color.RED);
 
-    private void loadUsers() {
+        Image logo = new Image(getClass().getResourceAsStream("/images/devil.jpg"));
+        ImageView logoView = new ImageView(logo);
+        logoView.setFitWidth(150);
+        logoView.setPreserveRatio(true);
+
+        TextField asuIdInput = new TextField();
+        asuIdInput.setPromptText("ASU ID");
+        asuIdInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+
+        PasswordField passwordInput = new PasswordField();
+        passwordInput.setPromptText("Password");
+        passwordInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+
+        Button loginButton = new Button("Log in");
+        loginButton.setPrefWidth(200);
+        loginButton.setStyle("-fx-background-color: silver; -fx-text-fill: black;");
+        loginButton.setOnAction(e -> handleLogin(asuIdInput.getText(), passwordInput.getText()));
+
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20));
+        layout.setStyle("-fx-background-color: indigo;");
+        layout.getChildren().addAll(title, logoView, asuIdInput, passwordInput, loginButton);
+
+        return new Scene(layout, 400, 500);
+    }
+
+    public void loadUsers() {
         if (users.isEmpty()) { // Load only if users are not already loaded
             try (BufferedReader reader = new BufferedReader(new FileReader("src/users.txt"))) {
                 String line;
@@ -115,7 +147,7 @@ public class LoginPage extends Application {
                 break;
             case "seller":
                 SellerPage sellerPage = new SellerPage();
-                newScene = new Scene(sellerPage.createContent(), 400, 500);
+                newScene = sellerPage.createContent(primaryStage, this); // Pass primaryStage and this instance
                 break;
             case "admin":
                 AdminPage adminPage = new AdminPage();
