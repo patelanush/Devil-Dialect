@@ -60,71 +60,101 @@ public class SellerPage {
 	}
 
 	private VBox createFormSection() {
-		// Form Title
-		Label formTitle = new Label("Please Input the Following Information About Your Book:");
-		formTitle.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-		formTitle.setTextFill(Color.BLACK);
+	    // Form Title
+	    Label formTitle = new Label("Please Input the Following Information About Your Book:");
+	    formTitle.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+	    formTitle.setTextFill(Color.BLACK);
 
-		// Name of Book
-		Label nameLabel = new Label("Name of Book:");
-		TextField nameField = new TextField();
+	    // Name of Book
+	    Label nameLabel = new Label("Name of Book:");
+	    TextField nameField = new TextField();
 
-		// Category
-		Label categoryLabel = new Label("Category:");
-		ComboBox<String> categoryDropdown = new ComboBox<>();
-		categoryDropdown.getItems().addAll("Natural Science Books", "Computer Books", "Math Books",
-				"English Language Books", "Other Books");
+	    // Author
+	    Label authorLabel = new Label("Author:");
+	    TextField authorField = new TextField();
 
-		// Condition
-		Label conditionLabel = new Label("Condition:");
-		ToggleGroup conditionGroup = new ToggleGroup();
-		RadioButton likeNew = new RadioButton("Used Like New");
-		RadioButton moderatelyUsed = new RadioButton("Moderately Used");
-		RadioButton heavilyUsed = new RadioButton("Heavily Used");
-		likeNew.setToggleGroup(conditionGroup);
-		moderatelyUsed.setToggleGroup(conditionGroup);
-		heavilyUsed.setToggleGroup(conditionGroup);
+	    // Year
+	    Label yearLabel = new Label("Year:");
+	    TextField yearField = new TextField();
 
-		HBox conditionBox = new HBox(10, likeNew, moderatelyUsed, heavilyUsed);
-		conditionBox.setAlignment(Pos.CENTER);
+	    // Category
+	    Label categoryLabel = new Label("Category:");
+	    ComboBox<String> categoryDropdown = new ComboBox<>();
+	    categoryDropdown.getItems().addAll(
+	        "Natural Science Books",
+	        "Computer Books",
+	        "Math Books",
+	        "English Language Books",
+	        "Other Books"
+	    );
 
-		// Price Paid
-		Label pricePaidLabel = new Label("Original Price:");
-		TextField pricePaidField = new TextField();
+	    // Condition
+	    Label conditionLabel = new Label("Condition:");
+	    ToggleGroup conditionGroup = new ToggleGroup();
+	    RadioButton likeNew = new RadioButton("Used Like New");
+	    RadioButton moderatelyUsed = new RadioButton("Moderately Used");
+	    RadioButton heavilyUsed = new RadioButton("Heavily Used");
+	    likeNew.setToggleGroup(conditionGroup);
+	    moderatelyUsed.setToggleGroup(conditionGroup);
+	    heavilyUsed.setToggleGroup(conditionGroup);
 
-		// Estimated Selling Price
-		Label estimatedPriceLabel = new Label("System Generated Buying Price:");
-		TextField estimatedPriceField = new TextField();
-		estimatedPriceField.setEditable(false);
+	    HBox conditionBox = new HBox(10, likeNew, moderatelyUsed, heavilyUsed);
+	    conditionBox.setAlignment(Pos.CENTER);
 
-		// Add listeners to update estimated price dynamically
-		categoryDropdown.valueProperty().addListener((observable, oldValue, newValue) -> {
-			updateEstimatedPrice(categoryDropdown, conditionGroup, pricePaidField, estimatedPriceField);
-		});
+	    // Price Paid
+	    Label pricePaidLabel = new Label("Original Price:");
+	    TextField pricePaidField = new TextField();
 
-		conditionGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-			updateEstimatedPrice(categoryDropdown, conditionGroup, pricePaidField, estimatedPriceField);
-		});
+	    // Estimated Selling Price
+	    Label estimatedPriceLabel = new Label("System Generated Buying Price:");
+	    TextField estimatedPriceField = new TextField();
+	    estimatedPriceField.setEditable(false);
 
-		pricePaidField.textProperty().addListener((observable, oldValue, newValue) -> {
-			updateEstimatedPrice(categoryDropdown, conditionGroup, pricePaidField, estimatedPriceField);
-		});
+	    // Add listeners to update estimated price dynamically
+	    categoryDropdown.valueProperty().addListener((observable, oldValue, newValue) -> {
+	        updateEstimatedPrice(categoryDropdown, conditionGroup, pricePaidField, estimatedPriceField);
+	    });
 
-		// List My Book Button
-		Button listButton = new Button("List my Book!");
-		listButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
-		listButton.setOnAction(e -> {
-			// Placeholder for functionality
-			System.out.println("Book listed for sale!");
-		});
+	    conditionGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+	        updateEstimatedPrice(categoryDropdown, conditionGroup, pricePaidField, estimatedPriceField);
+	    });
 
-		// Layout
-		VBox formLayout = new VBox(10, formTitle, nameLabel, nameField, categoryLabel, categoryDropdown, conditionLabel,
-				conditionBox, pricePaidLabel, pricePaidField, estimatedPriceLabel, estimatedPriceField, listButton);
-		formLayout.setAlignment(Pos.CENTER);
-		formLayout.setPadding(new Insets(20));
-		formLayout.setStyle("-fx-background-color: lightgray;");
-		return formLayout;
+	    pricePaidField.textProperty().addListener((observable, oldValue, newValue) -> {
+	        updateEstimatedPrice(categoryDropdown, conditionGroup, pricePaidField, estimatedPriceField);
+	    });
+
+	    // List My Book Button
+	    Button listButton = new Button("List my Book!");
+	    listButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+	    listButton.setOnAction(e -> {
+	        // Placeholder for functionality
+	        System.out.println("Book listed for sale!");
+	        System.out.println("Book Details:");
+	        System.out.println("Name: " + nameField.getText());
+	        System.out.println("Author: " + authorField.getText());
+	        System.out.println("Year: " + yearField.getText());
+	        System.out.println("Category: " + categoryDropdown.getValue());
+	        System.out.println("Condition: " + ((RadioButton) conditionGroup.getSelectedToggle()).getText());
+	        System.out.println("Original Price: " + pricePaidField.getText());
+	        System.out.println("Selling Price: " + estimatedPriceField.getText());
+	    });
+
+	    // Layout
+	    VBox formLayout = new VBox(10,
+	        formTitle, 
+	        nameLabel, nameField, 
+	        authorLabel, authorField, 
+	        yearLabel, yearField, 
+	        categoryLabel, categoryDropdown, 
+	        conditionLabel, conditionBox, 
+	        pricePaidLabel, pricePaidField, 
+	        estimatedPriceLabel, estimatedPriceField, 
+	        listButton
+	    );
+	    formLayout.setAlignment(Pos.CENTER);
+	    formLayout.setPadding(new Insets(20));
+	    formLayout.setStyle("-fx-background-color: lightgray;");
+	    return formLayout;
 	}
 
 	private void updateEstimatedPrice(ComboBox<String> categoryDropdown, ToggleGroup conditionGroup,
@@ -144,13 +174,13 @@ public class SellerPage {
 		if (selectedCondition != null) {
 			switch (selectedCondition.getText()) {
 			case "Used Like New":
-				conditionMultiplier = 0.8;
+				conditionMultiplier = 0.85;
 				break;
 			case "Moderately Used":
-				conditionMultiplier = 0.6;
+				conditionMultiplier = 0.75;
 				break;
 			case "Heavily Used":
-				conditionMultiplier = 0.4;
+				conditionMultiplier = 0.6;
 				break;
 			}
 		}
@@ -161,19 +191,19 @@ public class SellerPage {
 		if (selectedCategory != null) {
 			switch (selectedCategory) {
 			case "Natural Science Books":
-				categoryMultiplier = 1.2;
+				categoryMultiplier = 0.9;
 				break;
 			case "Computer Books":
-				categoryMultiplier = 1.3;
+				categoryMultiplier = 1;
 				break;
 			case "Math Books":
-				categoryMultiplier = 1.1;
+				categoryMultiplier = 0.95;
 				break;
 			case "English Language Books":
-				categoryMultiplier = 1.0;
+				categoryMultiplier = 0.85;
 				break;
 			case "Other Books":
-				categoryMultiplier = 0.9;
+				categoryMultiplier = 0.8;
 				break;
 			}
 		}
