@@ -1,5 +1,6 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,6 +17,9 @@ import javafx.stage.Stage;
 public class BuyerPage {
 	
 	private GridPane bookGrid;
+	private List<Book> cart = new ArrayList<>(); // Cart to hold added books
+	private double cartTotal = 0.0; // Total price of the cart
+	private Button cartButton; // Cart button to update the price dynamically
 	public Scene createContent(Stage primaryStage, LoginPage loginPage) {
 	    // Header Section
 	    HBox header = createHeader(primaryStage, loginPage);
@@ -49,8 +53,11 @@ public class BuyerPage {
 	    storeName.setTextFill(Color.WHITE);
 
 	    // Cart Button
-	    Button cartButton = new Button("Cart ($0.00)");
+	    cartButton = new Button("Cart ($0.00)");
 	    cartButton.setStyle("-fx-background-color: dodgerblue; -fx-text-fill: white;");
+	    cartButton.setOnAction(e -> {
+	        System.out.println("Cart clicked! Total items: " + cart.size() + ", Total price: $" + String.format("%.2f", cartTotal));
+	    });
 
 	    // Sign Out Button
 	    Button signOutButton = new Button("Sign Out");
@@ -136,18 +143,35 @@ public class BuyerPage {
         // Year
         Label yearLabel = new Label("Year: " + book.getYear());
 
+        // Category
+        Label categoryLabel = new Label("Category: " + book.getCategory());
+
         // Condition
         Label conditionLabel = new Label("Condition: " + book.getCondition());
+
+        // Price
+        Label priceLabel = new Label(String.format("Price: $%.2f", book.getPrice()));
+        priceLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: green;");
 
         // Add to Cart Button
         Button addToCartButton = new Button("Add to Cart");
         addToCartButton.setStyle("-fx-background-color: orange; -fx-text-fill: white;");
         addToCartButton.setOnAction(e -> {
-            System.out.println(book.getTitle() + " added to cart.");
+            // Add the book to the cart
+            cart.add(book);
+            cartTotal += book.getPrice();
+
+            // Update the cart button text
+            cartButton.setText(String.format("Cart ($%.2f)", cartTotal));
+
+            // Show success alert
+            showSuccessAlert(book.getTitle());
+
+            System.out.println(book.getTitle() + " added to cart. Total: $" + String.format("%.2f", cartTotal));
         });
 
         // Arrange elements in a vertical box
-        VBox bookCard = new VBox(10, titleLabel, authorLabel, yearLabel, conditionLabel, addToCartButton);
+        VBox bookCard = new VBox(10, titleLabel, authorLabel, yearLabel, categoryLabel, conditionLabel, priceLabel, addToCartButton);
         bookCard.setPadding(new Insets(10));
         bookCard.setStyle("-fx-background-color: white; -fx-border-color: silver; -fx-border-radius: 5;");
         return bookCard;
@@ -168,8 +192,8 @@ public class BuyerPage {
             boolean matchesCondition = selectedCondition.equals("All Conditions") || book.getCondition().equals(selectedCondition);
 
             if (matchesCategory && matchesCondition) {
-                VBox bookCard = createBookCard(book); // Create a card for the book
-                bookGrid.add(bookCard, column, row); // Add card to the grid
+                VBox bookCard = createBookCard(book); 
+                bookGrid.add(bookCard, column, row); 
 
                 column++;
                 if (column == 3) { // Move to the next row after 3 columns
@@ -178,6 +202,14 @@ public class BuyerPage {
                 }
             }
         }
+    }
+    
+    private void showSuccessAlert(String bookTitle) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(bookTitle + " has been added to your cart!");
+        alert.showAndWait();
     }
     
     
