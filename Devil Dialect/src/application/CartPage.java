@@ -82,15 +82,15 @@ public class CartPage {
 	        showAlert(Alert.AlertType.INFORMATION, "Order Placed", "Your order has been placed successfully!");
 
 	        //back to buyer page
-	        primaryStage.setScene(buyerPage.createContent(primaryStage, new LoginPage()));
+	        primaryStage.setScene(buyerPage.createContent(primaryStage, buyerPage.getLoginPage()));
+
 	    });
 
 	   //back button
 	    Button backButton = new Button("Back");
 	    backButton.setStyle("-fx-background-color: dodgerblue; -fx-text-fill: white;");
 	    backButton.setOnAction(e -> {
-	        
-	        primaryStage.setScene(buyerPage.createContent(primaryStage, new LoginPage()));
+	        primaryStage.setScene(buyerPage.createContent(primaryStage, buyerPage.getLoginPage()));
 	    });
 
 	    //cart page layout

@@ -23,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class LoginPage extends Application {
+	
 
 	private Map<String, String[]> users = new HashMap<>(); // stores user credentials and roles
 	private Stage primaryStage; //the main stage for navigation
@@ -76,7 +77,8 @@ public class LoginPage extends Application {
 
 		return new Scene(layout, 400, 500);
 	}
-
+	
+	//sets the scene for the login page
 	public Scene createContent(Stage primaryStage) {
 		Text title = new Text("Devil Dialect");
 		title.setFont(Font.font("Arial", FontWeight.BOLD, 30));

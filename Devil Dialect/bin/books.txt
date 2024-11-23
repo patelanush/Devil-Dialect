@@ -1,0 +1,6 @@
+book 1,me,2000,Used Like New,Natural Science Books,7.65
+book 2,me,2000,Moderately Used,Computer Books,77.25
+book 3,anush,2000,Moderately Used,English Language Books,24.86
+book 4,anush,2001,Heavily Used,Other Books,4.32
+book 5,sushant,2009,Moderately Used,Computer Books,7.50
+book 6,oscar,2008,Used Like New,English Language Books,7.23

@@ -20,11 +20,13 @@ public class BuyerPage {
 	private List<Book> cart = new ArrayList<>(); // cart to store selected books
 	public double cartTotal = 0.0; // total price of items in the cart
 	public Button purchaseButton; // button to display the cart total
+	private LoginPage loginPage; //login page
 	
 	
 	//builds the buyer page layout with header, sidebar, and book grid
 	public Scene createContent(Stage primaryStage, LoginPage loginPage) {
-
+		
+		this.loginPage = loginPage; //saves the reference to this login page
 		HBox header = createHeader(primaryStage, loginPage);
 
 		VBox sidebar = createSidebar();
@@ -39,6 +41,11 @@ public class BuyerPage {
 		layout.setStyle("-fx-background-color: lightgray;");
 
 		return new Scene(layout, 800, 600);
+	}
+	
+	//getter for login page
+	public LoginPage getLoginPage() {
+	    return loginPage;
 	}
 	
 	//creates the header with a logo, store name, purchase button, and sign-out button
@@ -56,9 +63,8 @@ public class BuyerPage {
 		purchaseButton = new Button(String.format("Purchase: ($%.2f)", cartTotal));
 		purchaseButton.setStyle("-fx-background-color: dodgerblue; -fx-text-fill: white;");
 		purchaseButton.setOnAction(e -> {
-
-			CartPage cartPage = new CartPage(cart, primaryStage, this);
-			primaryStage.setScene(cartPage.createContent());
+		    CartPage cartPage = new CartPage(cart, primaryStage, this);
+		    primaryStage.setScene(cartPage.createContent());
 		});
 
 		Button signOutButton = new Button("Sign Out");
@@ -185,7 +191,7 @@ public class BuyerPage {
 	}
 	
 	
-	// shows a success alert when a book is added to the cart
+	// shows a success alert when a book is added to the cart.
 	private void showSuccessAlert(String bookTitle) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Success");
