@@ -19,7 +19,7 @@ public class BuyerPage {
 	private GridPane bookGrid;
 	private List<Book> cart = new ArrayList<>(); // Cart to hold added books
 	private double cartTotal = 0.0; // Total price of the cart
-	private Button cartButton; // Cart button to update the price dynamically
+	private Button purchaseButton; // Cart button to update the price dynamically
 	public Scene createContent(Stage primaryStage, LoginPage loginPage) {
 	    // Header Section
 	    HBox header = createHeader(primaryStage, loginPage);
@@ -53,10 +53,12 @@ public class BuyerPage {
 	    storeName.setTextFill(Color.WHITE);
 
 	    // Cart Button
-	    cartButton = new Button("Cart ($0.00)");
-	    cartButton.setStyle("-fx-background-color: dodgerblue; -fx-text-fill: white;");
-	    cartButton.setOnAction(e -> {
-	        System.out.println("Cart clicked! Total items: " + cart.size() + ", Total price: $" + String.format("%.2f", cartTotal));
+	    purchaseButton = new Button("Purchase: ($0.00)");
+	    purchaseButton.setStyle("-fx-background-color: dodgerblue; -fx-text-fill: white;");
+	    purchaseButton.setOnAction(e -> {
+	        // Navigate to the CartPage
+	        CartPage cartPage = new CartPage(cart, primaryStage, this);
+	        primaryStage.setScene(cartPage.createContent());
 	    });
 
 	    // Sign Out Button
@@ -67,7 +69,7 @@ public class BuyerPage {
 	    });
 
 	    // Layout
-	    HBox header = new HBox(20, logoView, storeName, cartButton, signOutButton);
+	    HBox header = new HBox(20, logoView, storeName, purchaseButton, signOutButton);
 	    header.setAlignment(Pos.CENTER);
 	    header.setPadding(new Insets(10));
 	    header.setStyle("-fx-background-color: navy;");
@@ -162,7 +164,7 @@ public class BuyerPage {
             cartTotal += book.getPrice();
 
             // Update the cart button text
-            cartButton.setText(String.format("Cart ($%.2f)", cartTotal));
+            purchaseButton.setText(String.format("Purchase: ($%.2f)", cartTotal));
 
             // Show success alert
             showSuccessAlert(book.getTitle());
