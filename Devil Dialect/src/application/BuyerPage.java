@@ -169,7 +169,6 @@ public class BuyerPage {
             // Show success alert
             showSuccessAlert(book.getTitle());
 
-            System.out.println(book.getTitle() + " added to cart. Total: $" + String.format("%.2f", cartTotal));
         });
 
         // Arrange elements in a vertical box

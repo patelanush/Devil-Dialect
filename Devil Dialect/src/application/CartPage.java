@@ -40,6 +40,15 @@ public class CartPage {
                 cartItemsBox.getChildren().add(bookInfo);
             }
         }
+        
+        double cartTotal = 0.0;
+        for (Book book : cart) {
+            cartTotal += book.getPrice();
+        }
+
+        // Display Cart Total
+        Label totalLabel = new Label("Total: $" + String.format("%.2f", cartTotal));
+        totalLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         // Confirm Purchase Button
         Button confirmButton = new Button("Confirm Purchase");
@@ -71,7 +80,7 @@ public class CartPage {
         });
 
         // Layout
-        VBox layout = new VBox(20, cartTitle, cartItemsBox, confirmButton, backButton);
+        VBox layout = new VBox(20, cartTitle, cartItemsBox, totalLabel, confirmButton, backButton);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: lightgray;");
