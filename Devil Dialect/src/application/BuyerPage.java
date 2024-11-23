@@ -18,8 +18,8 @@ public class BuyerPage {
 	
 	private GridPane bookGrid;
 	private List<Book> cart = new ArrayList<>(); // Cart to hold added books
-	private double cartTotal = 0.0; // Total price of the cart
-	private Button purchaseButton; // Cart button to update the price dynamically
+	public double cartTotal = 0.0; // Total price of the cart
+	public Button purchaseButton; // Cart button to update the price dynamically
 	public Scene createContent(Stage primaryStage, LoginPage loginPage) {
 	    // Header Section
 	    HBox header = createHeader(primaryStage, loginPage);
@@ -53,7 +53,7 @@ public class BuyerPage {
 	    storeName.setTextFill(Color.WHITE);
 
 	    // Cart Button
-	    purchaseButton = new Button("Purchase: ($0.00)");
+	    purchaseButton = new Button(String.format("Purchase: ($%.2f)", cartTotal)); // Use current cart total
 	    purchaseButton.setStyle("-fx-background-color: dodgerblue; -fx-text-fill: white;");
 	    purchaseButton.setOnAction(e -> {
 	        // Navigate to the CartPage
