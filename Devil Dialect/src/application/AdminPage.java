@@ -3,6 +3,7 @@ package application;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+//mock up of admin view
 public class AdminPage {
     public VBox createContent() {
         VBox layout = new VBox();

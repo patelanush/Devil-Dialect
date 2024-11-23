@@ -1,4 +1,5 @@
 package application;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,156 +24,168 @@ import javafx.scene.image.ImageView;
 
 public class LoginPage extends Application {
 
-    private Map<String, String[]> users = new HashMap<>();
-    private Stage primaryStage;
+	private Map<String, String[]> users = new HashMap<>(); // stores user credentials and roles
+	private Stage primaryStage; //the main stage for navigation
 
-    @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        primaryStage.setTitle("Devil Dialect");
+	@Override
+	public void start(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		primaryStage.setTitle("Devil Dialect");
 
-        loadUsers();
+		loadUsers(); // loads user data from the file
 
-        Scene loginScene = createLoginScene();
-        primaryStage.setScene(loginScene);
-        primaryStage.show();
-    }
+		Scene loginScene = createLoginScene(); // create the login screen
+		primaryStage.setScene(loginScene);
+		primaryStage.show();
+	}
+	
+	
+	//creates the login page layout
+	public Scene createLoginScene() {
+		Text title = new Text("Devil Dialect");
+		title.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+		title.setFill(Color.RED);
 
-    public Scene createLoginScene() {
-        Text title = new Text("Devil Dialect");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-        title.setFill(Color.RED);
-        
-        Image logo = new Image(getClass().getResourceAsStream("/images/devil.jpg"));
-        ImageView logoView = new ImageView(logo);
-        logoView.setFitWidth(150);  
-        logoView.setPreserveRatio(true);
+		//logo
+		Image logo = new Image(getClass().getResourceAsStream("/images/devil.jpg"));
+		ImageView logoView = new ImageView(logo);
+		logoView.setFitWidth(150);
+		logoView.setPreserveRatio(true);
+		
+		// input fields for ASU ID and Password
+		TextField asuIdInput = new TextField();
+		asuIdInput.setPromptText("ASU ID");
+		asuIdInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
 
-        TextField asuIdInput = new TextField();
-        asuIdInput.setPromptText("ASU ID");
-        asuIdInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+		PasswordField passwordInput = new PasswordField();
+		passwordInput.setPromptText("Password");
+		passwordInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+		
+		// login button
+		Button loginButton = new Button("Log in");
+		loginButton.setPrefWidth(200);
+		loginButton.setStyle("-fx-background-color: silver; -fx-text-fill: black;");
+		loginButton.setOnAction(e -> handleLogin(asuIdInput.getText(), passwordInput.getText()));
+		
+		//layout for the login page
+		VBox layout = new VBox(10);
+		layout.setAlignment(Pos.CENTER);
+		layout.setPadding(new Insets(20));
+		layout.setStyle("-fx-background-color: indigo;");
+		layout.getChildren().addAll(title, logoView, asuIdInput, passwordInput, loginButton);
 
-        PasswordField passwordInput = new PasswordField();
-        passwordInput.setPromptText("Password");
-        passwordInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+		return new Scene(layout, 400, 500);
+	}
 
-        Button loginButton = new Button("Log in");
-        loginButton.setPrefWidth(200);
-        loginButton.setStyle("-fx-background-color: silver; -fx-text-fill: black;");
-        loginButton.setOnAction(e -> handleLogin(asuIdInput.getText(), passwordInput.getText()));
+	public Scene createContent(Stage primaryStage) {
+		Text title = new Text("Devil Dialect");
+		title.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+		title.setFill(Color.RED);
 
-        VBox layout = new VBox(10);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: indigo;");
-        layout.getChildren().addAll(title, logoView, asuIdInput, passwordInput, loginButton);
+		Image logo = new Image(getClass().getResourceAsStream("/images/devil.jpg"));
+		ImageView logoView = new ImageView(logo);
+		logoView.setFitWidth(150);
+		logoView.setPreserveRatio(true);
 
-        return new Scene(layout, 400, 500);
-    }
-    
-    public Scene createContent(Stage primaryStage) {
-        Text title = new Text("Devil Dialect");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-        title.setFill(Color.RED);
+		TextField asuIdInput = new TextField();
+		asuIdInput.setPromptText("ASU ID");
+		asuIdInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
 
-        Image logo = new Image(getClass().getResourceAsStream("/images/devil.jpg"));
-        ImageView logoView = new ImageView(logo);
-        logoView.setFitWidth(150);
-        logoView.setPreserveRatio(true);
+		PasswordField passwordInput = new PasswordField();
+		passwordInput.setPromptText("Password");
+		passwordInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
 
-        TextField asuIdInput = new TextField();
-        asuIdInput.setPromptText("ASU ID");
-        asuIdInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+		Button loginButton = new Button("Log in");
+		loginButton.setPrefWidth(200);
+		loginButton.setStyle("-fx-background-color: silver; -fx-text-fill: black;");
+		loginButton.setOnAction(e -> handleLogin(asuIdInput.getText(), passwordInput.getText()));
 
-        PasswordField passwordInput = new PasswordField();
-        passwordInput.setPromptText("Password");
-        passwordInput.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+		VBox layout = new VBox(10);
+		layout.setAlignment(Pos.CENTER);
+		layout.setPadding(new Insets(20));
+		layout.setStyle("-fx-background-color: indigo;");
+		layout.getChildren().addAll(title, logoView, asuIdInput, passwordInput, loginButton);
 
-        Button loginButton = new Button("Log in");
-        loginButton.setPrefWidth(200);
-        loginButton.setStyle("-fx-background-color: silver; -fx-text-fill: black;");
-        loginButton.setOnAction(e -> handleLogin(asuIdInput.getText(), passwordInput.getText()));
+		return new Scene(layout, 400, 500);
+	}
+	
+	//loads the user data from "users.txt" into the users map
+	public void loadUsers() {
+		if (users.isEmpty()) {
+			try (BufferedReader reader = new BufferedReader(new FileReader("src/users.txt"))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					String[] parts = line.split(",");
+					if (parts.length == 3) {
+						String asuId = parts[0];
+						String password = parts[1];
+						String role = parts[2];
+						users.put(asuId, new String[] { password, role });
+					}
+				}
+			} catch (IOException e) {
+				System.out.println("Error: " + e.getMessage());
+			}
+		}
+	}
+	
+	
+	// handles user login by verifying ASU ID and password
+	private void handleLogin(String asuId, String password) {
+		if (users.containsKey(asuId)) {
+			String[] credentials = users.get(asuId);
+			String correctPassword = credentials[0];
+			String role = credentials[1];
 
-        VBox layout = new VBox(10);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: indigo;");
-        layout.getChildren().addAll(title, logoView, asuIdInput, passwordInput, loginButton);
+			if (correctPassword.equals(password)) {
+				showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome, " + asuId + "!");
+				redirectToRolePage(role);
+			} else {
+				showAlert(Alert.AlertType.ERROR, "Login Failed", "Incorrect or invalid ASU ID or password.");
+			}
+		} else {
+			showAlert(Alert.AlertType.ERROR, "Login Failed", "Incorrect or invalid ASU ID or password.");
+		}
+	}
+	
+	//changes to the appropriate role page (buyer, seller, or admin)
+	private void redirectToRolePage(String role) {
+		Scene newScene = null;
+		switch (role) {
+		case "buyer":
+			BuyerPage buyerPage = new BuyerPage();
+			newScene = buyerPage.createContent(primaryStage, this);
+			break;
+		case "seller":
+			SellerPage sellerPage = new SellerPage();
+			newScene = sellerPage.createContent(primaryStage, this);
+			break;
+		case "admin":
+			AdminPage adminPage = new AdminPage();
+			newScene = new Scene(adminPage.createContent(), 400, 500);
+			break;
+		default:
+			System.out.println("Unknown role: " + role);
+			return;
+		}
+		primaryStage.setScene(newScene);
+	}
+	
+	//reloads the login scene for sign-out func
+	public void reloadLoginScene() {
+		primaryStage.setScene(createLoginScene());
+	}
+	
+	//displays alert
+	private void showAlert(Alert.AlertType alertType, String title, String message) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
 
-        return new Scene(layout, 400, 500);
-    }
-
-    public void loadUsers() {
-        if (users.isEmpty()) { // Load only if users are not already loaded
-            try (BufferedReader reader = new BufferedReader(new FileReader("src/users.txt"))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    if (parts.length == 3) {
-                        String asuId = parts[0];
-                        String password = parts[1];
-                        String role = parts[2];
-                        users.put(asuId, new String[]{password, role});
-                    }
-                }
-            } catch (IOException e) {
-                System.out.println("Error loading users: " + e.getMessage());
-            }
-        }
-    }
-
-    private void handleLogin(String asuId, String password) {
-        if (users.containsKey(asuId)) {
-            String[] credentials = users.get(asuId);
-            String correctPassword = credentials[0];
-            String role = credentials[1];
-            
-            if (correctPassword.equals(password)) {
-                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome, " + asuId + "!");
-                redirectToRolePage(role);
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Login Failed", "Incorrect or invalid ASU ID or password.");
-            }
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Login Failed", "Incorrect or invalid ASU ID or password.");
-        }
-    }
-
-    private void redirectToRolePage(String role) {
-        Scene newScene = null;
-        switch (role) {
-            case "buyer":
-                BuyerPage buyerPage = new BuyerPage();
-                newScene = buyerPage.createContent(primaryStage, this); // Pass primaryStage and this instance
-                break;
-            case "seller":
-                SellerPage sellerPage = new SellerPage();
-                newScene = sellerPage.createContent(primaryStage, this); // Pass primaryStage and this instance
-                break;
-            case "admin":
-                AdminPage adminPage = new AdminPage();
-                newScene = new Scene(adminPage.createContent(), 400, 500);
-                break;
-            default:
-                System.out.println("Unknown role: " + role);
-                return;
-        }
-        primaryStage.setScene(newScene);
-    }
-    
-    public void reloadLoginScene() {
-        primaryStage.setScene(createLoginScene());
-    }
-
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+	public static void main(String[] args) {
+		launch(args);
+	}
 }
